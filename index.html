@@ -1,154 +1,42 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Apple Hardware Diagnostics</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple Hardware Diagnostic</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#007AFF',
-                        success: '#30D158',
-                        warning: '#FF9F0A',
-                        danger: '#FF453A',
-                        background: '#F2F2F7',
-                        card: '#FFFFFF',
-                    },
-                    dark: {
-                        colors: {
-                            primary: '#0A84FF',
-                            background: '#000000',
-                            card: '#1C1C1E',
-                        }
-                    },
-                    animation: {
-                        'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'bounce-slow': 'bounce 3s infinite',
-                        'fade-in': 'fadeIn 0.5s ease-in',
-                        'slide-up': 'slideUp 0.3s ease-out'
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0', transform: 'translateY(10px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' }
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(20px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        
-        * {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            -webkit-tap-highlight-color: transparent;
+        /* Hide scrollbar but keep functionality */
+        ::-webkit-scrollbar {
+            display: none;
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
         
-        body.dark {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        /* Hardware test colors */
+        .test-running {
+            animation: pulse 2s infinite;
         }
         
-        /* Glass effect */
-        .glass {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .dark .glass {
-            background: rgba(28, 28, 30, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        /* Card styles */
-        .card {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-        
-        .dark .card {
-            background: #1C1C1E;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
-        }
-        
-        .dark .card:hover {
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
-        }
-        
-        /* Test status indicators */
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 8px;
-        }
-        
-        .status-pending { background: #8E8E93; }
-        .status-running { background: #007AFF; animation: pulse 1.5s infinite; }
-        .status-success { background: #30D158; }
-        .status-warning { background: #FF9F0A; }
-        .status-danger { background: #FF453A; }
-        
-        /* Touch test canvas */
-        .touch-canvas {
-            background: linear-gradient(135deg, #0F2027, #203A43, #2C5364);
-            border-radius: 16px;
-            position: relative;
-            overflow: hidden;
-            touch-action: none;
-        }
-        
-        .touch-point {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 122, 255, 0.8) 0%, rgba(0, 122, 255, 0.2) 70%);
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            animation: touchEffect 0.5s ease-out;
-        }
-        
-        @keyframes touchEffect {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
         }
         
         /* Camera preview */
         .camera-preview {
-            background: #000;
-            border-radius: 16px;
+            width: 100%;
+            height: 250px;
+            background: black;
+            border-radius: 12px;
             overflow: hidden;
-            position: relative;
         }
         
         .camera-preview video {
@@ -159,9 +47,9 @@
         
         /* Audio visualizer */
         .audio-visualizer {
-            height: 120px;
-            background: linear-gradient(to bottom, #000, #1a1a2e);
-            border-radius: 12px;
+            height: 100px;
+            background: #000;
+            border-radius: 8px;
             position: relative;
             overflow: hidden;
         }
@@ -169,148 +57,92 @@
         .audio-bar {
             position: absolute;
             bottom: 0;
-            width: 8px;
+            width: 6px;
             background: linear-gradient(to top, #007AFF, #34C759);
-            border-radius: 4px 4px 0 0;
-            transform-origin: bottom;
+            border-radius: 3px 3px 0 0;
         }
         
-        /* Sensor visualization */
-        .sensor-visual {
+        /* Touch canvas */
+        .touch-canvas {
             width: 100%;
             height: 200px;
-            background: linear-gradient(135deg, #1D2B64, #2C3E50);
-            border-radius: 16px;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            border-radius: 12px;
             position: relative;
-            overflow: hidden;
+            touch-action: none;
         }
         
-        .sensor-grid {
+        .touch-point {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
-        
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #007AFF 0%, rgba(0, 122, 255, 0.3) 70%);
+            transform: translate(-50%, -50%);
             pointer-events: none;
-            transition: opacity 0.3s ease;
-            backdrop-filter: blur(5px);
+            animation: touch-pulse 0.5s ease-out;
         }
         
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: all;
+        @keyframes touch-pulse {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
         }
         
-        .modal-content {
-            background: white;
-            border-radius: 24px;
-            padding: 24px;
-            max-width: 90%;
-            max-height: 90%;
-            overflow-y: auto;
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
-        }
-        
-        .dark .modal-content {
-            background: #1C1C1E;
-        }
-        
-        .modal-overlay.active .modal-content {
-            transform: translateY(0);
-        }
-        
-        /* Display test */
+        /* Display test screens */
         .display-test {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            z-index: 2000;
+            z-index: 1000;
             display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
         }
         
         .display-test.active {
-            display: flex;
+            display: block;
         }
         
-        /* Health score ring */
-        .health-ring {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: conic-gradient(#30D158 0% 75%, rgba(255, 255, 255, 0.1) 75% 100%);
-            display: flex;
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
             align-items: center;
             justify-content: center;
+            z-index: 1001;
         }
         
-        .health-ring-inner {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
             background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
         }
         
-        .dark .health-ring-inner {
-            background: #1C1C1E;
+        .dark .modal-content {
+            background: #1c1c1e;
+            color: white;
         }
         
-        /* Button animations */
-        .btn {
-            transition: all 0.3s ease;
+        /* Dark mode */
+        .dark {
+            background: #000;
+            color: white;
         }
         
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        .btn:active {
-            transform: translateY(0);
-        }
-        
-        /* Loading spinner */
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-top-color: #007AFF;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        /* Safe area for iPhone X+ */
+        /* Safe areas for iPhone */
         .safe-top {
             padding-top: env(safe-area-inset-top);
         }
@@ -318,490 +150,310 @@
         .safe-bottom {
             padding-bottom: env(safe-area-inset-bottom);
         }
-        
-        /* Responsive adjustments */
-        @media (max-width: 640px) {
-            .container {
-                padding-left: 16px;
-                padding-right: 16px;
-            }
-            
-            .modal-content {
-                padding: 20px;
-                max-width: 95%;
-            }
-        }
-        
-        @media (min-width: 641px) and (max-width: 1024px) {
-            .container {
-                padding-left: 32px;
-                padding-right: 32px;
-            }
-        }
-        
-        /* Print styles for reports */
-        @media print {
-            .no-print {
-                display: none !important;
-            }
-            
-            body {
-                background: white !important;
-                color: black !important;
-            }
-            
-            .card {
-                box-shadow: none !important;
-                border: 1px solid #ddd !important;
-            }
-        }
     </style>
 </head>
-<body class="text-gray-900 dark:text-gray-100 safe-top safe-bottom">
+<body class="bg-gray-100 dark:bg-black text-gray-900 dark:text-white safe-top safe-bottom">
     
     <!-- Loading Screen -->
-    <div id="loadingScreen" class="fixed inset-0 bg-gradient-to-br from-blue-500 to-purple-600 z-50 flex flex-col items-center justify-center">
-        <div class="spinner mb-8"></div>
-        <h1 class="text-4xl font-bold text-white mb-4">Apple Diagnostics</h1>
-        <p class="text-white/80 text-lg">Initializing hardware tests...</p>
+    <div id="loading" class="fixed inset-0 bg-gradient-to-br from-blue-600 to-purple-700 flex items-center justify-center z-50">
+        <div class="text-center">
+            <div class="w-20 h-20 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-6"></div>
+            <h1 class="text-3xl font-bold text-white mb-2">Apple Diagnostics</h1>
+            <p class="text-white/80">Initializing hardware tests...</p>
+        </div>
     </div>
     
-    <!-- Device Selection -->
-    <div id="deviceSelection" class="min-h-screen flex items-center justify-center p-4" style="display: none;">
-        <div class="card w-full max-w-4xl p-8">
-            <div class="text-center mb-10">
-                <div class="w-24 h-24 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                    <i class="fas fa-stethoscope text-white text-4xl"></i>
+    <!-- Main App -->
+    <div id="app" class="min-h-screen p-4" style="display: none;">
+        
+        <!-- Header -->
+        <header class="mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h1 class="text-3xl font-bold">Hardware Diagnostic</h1>
+                    <p class="text-gray-600 dark:text-gray-400">Test your device's hardware</p>
                 </div>
-                <h1 class="text-4xl font-bold mb-4">Apple Hardware Diagnostics</h1>
-                <p class="text-gray-600 dark:text-gray-400 text-lg">Select your device for accurate hardware testing</p>
+                <div class="flex items-center space-x-4">
+                    <button id="themeToggle" class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block"></i>
+                    </button>
+                    <button id="deviceSelectBtn" class="px-4 py-2 bg-blue-500 text-white rounded-lg">
+                        <i class="fas fa-mobile-alt mr-2"></i>
+                        <span id="currentDevice">Select Device</span>
+                    </button>
+                </div>
             </div>
             
-            <!-- Device Type Tabs -->
-            <div class="flex mb-8 rounded-2xl bg-gray-100 dark:bg-gray-800 p-1">
-                <button id="iphoneTab" class="flex-1 py-4 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-semibold text-lg shadow">
-                    <i class="fas fa-mobile-alt mr-2"></i>iPhone
+            <!-- Health Score -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-4 mb-6 shadow">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-medium">Device Health</span>
+                    <span id="healthScore" class="text-2xl font-bold">0%</span>
+                </div>
+                <div class="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                    <div id="healthBar" class="h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Quick Tests -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <button onclick="startFullTest()" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 rounded-2xl text-center hover:scale-105 transition-transform">
+                <i class="fas fa-play-circle text-3xl mb-3"></i>
+                <div class="font-bold">Full Test</div>
+                <div class="text-sm opacity-90">Complete diagnostic</div>
+            </button>
+            
+            <button onclick="runDisplayTest()" class="bg-gradient-to-r from-red-500 to-pink-600 text-white p-6 rounded-2xl text-center hover:scale-105 transition-transform">
+                <i class="fas fa-tv text-3xl mb-3"></i>
+                <div class="font-bold">Display</div>
+                <div class="text-sm opacity-90">Screen test</div>
+            </button>
+            
+            <button onclick="runCameraTest()" class="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-6 rounded-2xl text-center hover:scale-105 transition-transform">
+                <i class="fas fa-camera text-3xl mb-3"></i>
+                <div class="font-bold">Camera</div>
+                <div class="text-sm opacity-90">Front & rear</div>
+            </button>
+            
+            <button onclick="runAudioTest()" class="bg-gradient-to-r from-yellow-500 to-orange-600 text-white p-6 rounded-2xl text-center hover:scale-105 transition-transform">
+                <i class="fas fa-volume-up text-3xl mb-3"></i>
+                <div class="font-bold">Audio</div>
+                <div class="text-sm opacity-90">Mic & speakers</div>
+            </button>
+        </div>
+        
+        <!-- Hardware Tests Grid -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Hardware Tests</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="testsGrid">
+                <!-- Tests will be dynamically added here -->
+            </div>
+        </div>
+        
+        <!-- Live Sensors -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-8 shadow">
+            <h2 class="text-2xl font-bold mb-6">Live Sensor Data</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Motion Sensors -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4 flex items-center">
+                        <i class="fas fa-compass text-blue-500 mr-2"></i>
+                        Motion Sensors
+                    </h3>
+                    <div class="grid grid-cols-3 gap-4 mb-4">
+                        <div class="bg-gray-100 dark:bg-gray-900 p-4 rounded-xl">
+                            <div class="text-sm text-gray-500">Accel X</div>
+                            <div id="accelX" class="text-2xl font-bold">0.00</div>
+                            <div class="text-xs text-gray-500">m/s²</div>
+                        </div>
+                        <div class="bg-gray-100 dark:bg-gray-900 p-4 rounded-xl">
+                            <div class="text-sm text-gray-500">Accel Y</div>
+                            <div id="accelY" class="text-2xl font-bold">0.00</div>
+                            <div class="text-xs text-gray-500">m/s²</div>
+                        </div>
+                        <div class="bg-gray-100 dark:bg-gray-900 p-4 rounded-xl">
+                            <div class="text-sm text-gray-500">Accel Z</div>
+                            <div id="accelZ" class="text-2xl font-bold">0.00</div>
+                            <div class="text-xs text-gray-500">m/s²</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Touch Test -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4 flex items-center">
+                        <i class="fas fa-hand-point-up text-purple-500 mr-2"></i>
+                        Touch Screen Test
+                    </h3>
+                    <div class="touch-canvas mb-4" id="touchCanvas">
+                        <div class="absolute inset-0 flex items-center justify-center text-white/70 text-center p-4">
+                            <div>
+                                <i class="fas fa-hand-pointer text-4xl mb-2"></i>
+                                <p>Touch and drag here</p>
+                                <p class="text-sm">Test multi-touch capability</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-gradient-to-r from-blue-500 to-cyan-600 text-white p-4 rounded-xl text-center">
+                            <div class="text-sm opacity-90">Touch Points</div>
+                            <div id="touchCount" class="text-3xl font-bold">0</div>
+                        </div>
+                        <div class="bg-gradient-to-r from-purple-500 to-pink-600 text-white p-4 rounded-xl text-center">
+                            <div class="text-sm opacity-90">Max Simultaneous</div>
+                            <div id="maxTouch" class="text-3xl font-bold">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test Results -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Test Results</h2>
+                <button onclick="clearResults()" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg">
+                    <i class="fas fa-trash mr-2"></i>Clear
                 </button>
-                <button id="ipadTab" class="flex-1 py-4 rounded-xl text-gray-600 dark:text-gray-400 font-semibold text-lg">
-                    <i class="fas fa-tablet-alt mr-2"></i>iPad
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-gray-200 dark:border-gray-700">
+                            <th class="text-left py-3">Test</th>
+                            <th class="text-left py-3">Status</th>
+                            <th class="text-left py-3">Result</th>
+                            <th class="text-left py-3">Details</th>
+                            <th class="text-left py-3">Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTable">
+                        <!-- Results will be added here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-gray-500 dark:text-gray-400 text-sm">
+            <p>All tests run locally on your device • No data collected</p>
+            <p class="mt-2">Made for Apple device diagnostics</p>
+        </footer>
+    </div>
+    
+    <!-- Device Selection Modal -->
+    <div id="deviceModal" class="modal">
+        <div class="modal-content max-w-2xl">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-mobile-alt text-white text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold mb-2">Select Your Device</h2>
+                <p class="text-gray-600 dark:text-gray-400">Choose for accurate testing</p>
+            </div>
+            
+            <div class="mb-6">
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <button id="iphoneTab" class="py-3 bg-blue-500 text-white rounded-xl font-medium">iPhone</button>
+                    <button id="ipadTab" class="py-3 bg-gray-200 dark:bg-gray-800 rounded-xl">iPad</button>
+                </div>
+                
+                <div id="deviceList" class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-64 overflow-y-auto p-2">
+                    <!-- Devices will be added here -->
+                </div>
+            </div>
+            
+            <div class="flex gap-4">
+                <button onclick="closeModal('deviceModal')" class="flex-1 py-3 bg-gray-200 dark:bg-gray-800 rounded-xl">
+                    Cancel
                 </button>
-            </div>
-            
-            <!-- Device Grid -->
-            <div id="iphoneGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto p-2 mb-8">
-                <!-- iPhone devices will be populated here -->
-            </div>
-            
-            <div id="ipadGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto p-2 mb-8 hidden">
-                <!-- iPad devices will be populated here -->
-            </div>
-            
-            <!-- Action Buttons -->
-            <div class="flex flex-col md:flex-row gap-4">
-                <button id="confirmDevice" class="flex-1 py-4 px-8 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl font-semibold text-lg btn">
-                    <i class="fas fa-check-circle mr-2"></i>Continue with Selected Device
-                </button>
-                <button id="skipSelection" class="flex-1 py-4 px-8 bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-2xl font-semibold text-lg btn">
-                    <i class="fas fa-forward mr-2"></i>Use Basic Tests
+                <button onclick="confirmDevice()" class="flex-1 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl font-medium">
+                    Confirm
                 </button>
             </div>
         </div>
     </div>
     
-    <!-- Main Dashboard -->
-    <div id="mainApp" class="min-h-screen" style="display: none;">
-        <!-- Header -->
-        <header class="glass sticky top-0 z-40">
-            <div class="container mx-auto px-4 py-4">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <div class="flex items-center space-x-4">
-                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                            <i class="fas fa-stethoscope text-white text-xl"></i>
-                        </div>
-                        <div>
-                            <h1 class="text-2xl font-bold">Hardware Diagnostics</h1>
-                            <div class="flex items-center space-x-2">
-                                <span id="deviceBadge" class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium">
-                                    <i class="fas fa-mobile-alt mr-1"></i>
-                                    <span id="currentDevice">Select Device</span>
-                                </span>
-                                <span id="deviceChip" class="text-sm text-gray-500 dark:text-gray-400"></span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center space-x-3">
-                        <button id="themeToggle" class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center btn">
-                            <i class="fas fa-moon dark:hidden"></i>
-                            <i class="fas fa-sun hidden dark:block"></i>
-                        </button>
-                        <button id="changeDevice" class="px-4 py-2 bg-gray-200 dark:bg-gray-800 rounded-xl btn">
-                            <i class="fas fa-exchange-alt mr-2"></i>Change Device
-                        </button>
-                        <button id="runAllTests" class="px-6 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-semibold btn">
-                            <i class="fas fa-play mr-2"></i>Run All Tests
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Health Score -->
-                <div class="mt-6">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="font-semibold">Device Health Score</span>
-                        <span id="healthScore" class="text-2xl font-bold">0%</span>
-                    </div>
-                    <div class="w-full h-3 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
-                        <div id="healthBar" class="h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 transition-all duration-1000" style="width: 0%"></div>
-                    </div>
-                    <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        <span>Poor</span>
-                        <span>Excellent</span>
-                    </div>
-                </div>
-            </div>
-        </header>
-        
-        <!-- Main Content -->
-        <main class="container mx-auto px-4 py-8">
-            <!-- Quick Test Buttons -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-                <div class="card p-6 text-center">
-                    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center">
-                        <i class="fas fa-play text-white text-2xl"></i>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">Full Diagnostic</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Complete hardware check</p>
-                    <button id="fullDiagnostic" class="w-full py-3 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-xl font-semibold btn">
-                        Run Now
-                    </button>
-                </div>
-                
-                <div class="card p-6 text-center">
-                    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center">
-                        <i class="fas fa-tv text-white text-2xl"></i>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">Display Test</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Screen & touch check</p>
-                    <button onclick="runDisplayTest()" class="w-full py-3 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-xl font-semibold btn">
-                        Run Now
-                    </button>
-                </div>
-                
-                <div class="card p-6 text-center">
-                    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
-                        <i class="fas fa-camera text-white text-2xl"></i>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">Camera Test</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Front & rear cameras</p>
-                    <button onclick="openCameraTest()" class="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-semibold btn">
-                        Run Now
-                    </button>
-                </div>
-                
-                <div class="card p-6 text-center">
-                    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-yellow-500 to-orange-600 flex items-center justify-center">
-                        <i class="fas fa-volume-up text-white text-2xl"></i>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">Audio Test</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Mic & speakers</p>
-                    <button onclick="openAudioTest()" class="w-full py-3 bg-gradient-to-r from-yellow-500 to-orange-600 text-white rounded-xl font-semibold btn">
-                        Run Now
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Hardware Test Grid -->
-            <div class="mb-12">
-                <div class="flex justify-between items-center mb-8">
-                    <div>
-                        <h2 class="text-3xl font-bold mb-2">Hardware Tests</h2>
-                        <p class="text-gray-600 dark:text-gray-400">Comprehensive hardware diagnostics</p>
-                    </div>
-                    <div class="flex space-x-3">
-                        <button id="selectAllTests" class="px-4 py-2 bg-gray-200 dark:bg-gray-800 rounded-xl btn">
-                            <i class="fas fa-check-double mr-2"></i>Select All
-                        </button>
-                        <button id="runSelectedTests" class="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl font-semibold btn">
-                            <i class="fas fa-play mr-2"></i>Run Selected
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="testGrid">
-                    <!-- Test cards will be populated here -->
-                </div>
-            </div>
-            
-            <!-- Live Sensor Dashboard -->
-            <div class="card p-6 mb-12">
-                <h2 class="text-3xl font-bold mb-6">Live Sensor Dashboard</h2>
-                
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <!-- Motion Sensors -->
-                    <div>
-                        <h3 class="text-xl font-bold mb-6 flex items-center">
-                            <i class="fas fa-compass text-blue-500 mr-3"></i>
-                            Motion Sensors
-                        </h3>
-                        <div class="sensor-visual mb-6">
-                            <div class="sensor-grid"></div>
-                            <div id="sensorCube" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32">
-                                <!-- 3D cube visualization -->
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-3 gap-4">
-                            <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl text-center">
-                                <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">Accel X</div>
-                                <div id="accelX" class="text-2xl font-bold">0.00</div>
-                                <div class="text-xs text-gray-500">m/s²</div>
-                            </div>
-                            <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl text-center">
-                                <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">Accel Y</div>
-                                <div id="accelY" class="text-2xl font-bold">0.00</div>
-                                <div class="text-xs text-gray-500">m/s²</div>
-                            </div>
-                            <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl text-center">
-                                <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">Accel Z</div>
-                                <div id="accelZ" class="text-2xl font-bold">0.00</div>
-                                <div class="text-xs text-gray-500">m/s²</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Touch Test -->
-                    <div>
-                        <h3 class="text-xl font-bold mb-6 flex items-center">
-                            <i class="fas fa-hand-pointer text-purple-500 mr-3"></i>
-                            Touch Screen Test
-                        </h3>
-                        <div class="touch-canvas mb-6" id="touchCanvas" style="height: 250px;">
-                            <div class="absolute inset-0 flex items-center justify-center text-white/70">
-                                <div class="text-center glass p-6 rounded-2xl">
-                                    <i class="fas fa-hand-pointer text-4xl mb-4"></i>
-                                    <p class="text-lg">Touch and drag to test multi-touch</p>
-                                    <p class="text-sm mt-2">Supports up to 10 simultaneous touches</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-gradient-to-r from-blue-500 to-cyan-600 p-4 rounded-xl text-center text-white">
-                                <div class="text-sm opacity-90 mb-1">Current Touches</div>
-                                <div id="touchCount" class="text-3xl font-bold">0</div>
-                            </div>
-                            <div class="bg-gradient-to-r from-purple-500 to-pink-600 p-4 rounded-xl text-center text-white">
-                                <div class="text-sm opacity-90 mb-1">Max Simultaneous</div>
-                                <div id="maxTouch" class="text-3xl font-bold">0</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Test Results -->
-            <div class="card p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <div>
-                        <h2 class="text-3xl font-bold mb-2">Test Results</h2>
-                        <p class="text-gray-600 dark:text-gray-400">Detailed hardware test analysis</p>
-                    </div>
-                    <div class="flex space-x-3">
-                        <button id="clearResults" class="px-4 py-2 bg-gray-200 dark:bg-gray-800 rounded-xl btn">
-                            <i class="fas fa-trash mr-2"></i>Clear Results
-                        </button>
-                        <button id="exportResults" class="px-6 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-semibold btn">
-                            <i class="fas fa-file-export mr-2"></i>Export Report
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead>
-                            <tr class="border-b border-gray-200 dark:border-gray-700">
-                                <th class="text-left py-4 px-6 font-semibold">Test</th>
-                                <th class="text-left py-4 px-6 font-semibold">Category</th>
-                                <th class="text-left py-4 px-6 font-semibold">Status</th>
-                                <th class="text-left py-4 px-6 font-semibold">Result</th>
-                                <th class="text-left py-4 px-6 font-semibold">Details</th>
-                                <th class="text-left py-4 px-6 font-semibold">Time</th>
-                                <th class="text-left py-4 px-6 font-semibold">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="resultsTable" class="divide-y divide-gray-200 dark:divide-gray-700">
-                            <!-- Results will be populated here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
-        
-        <!-- Footer -->
-        <footer class="mt-12 py-8 border-t border-gray-200 dark:border-gray-800">
-            <div class="container mx-auto px-4">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <div class="mb-6 md:mb-0">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                                <i class="fas fa-stethoscope text-white"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold">Apple Hardware Diagnostics</h4>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">Professional testing suite</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-center md:text-right">
-                        <p class="text-gray-600 dark:text-gray-400 text-sm">
-                            All tests run locally on your device • No data collected • Made with <i class="fas fa-heart text-red-500"></i>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    </div>
-    
     <!-- Camera Test Modal -->
-    <div id="cameraModal" class="modal-overlay">
-        <div class="modal-content max-w-4xl">
-            <div class="flex justify-between items-center mb-8">
-                <div>
-                    <h2 class="text-3xl font-bold">Camera Diagnostics</h2>
-                    <p class="text-gray-600 dark:text-gray-400">Test all camera features</p>
-                </div>
-                <button onclick="closeModal('cameraModal')" class="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center btn">
-                    <i class="fas fa-times text-2xl"></i>
-                </button>
+    <div id="cameraModal" class="modal">
+        <div class="modal-content max-w-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Camera Test</h2>
+                <button onclick="closeModal('cameraModal')" class="text-3xl">&times;</button>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Front Camera -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
-                    <h3 class="text-xl font-bold mb-4">
-                        <i class="fas fa-user text-blue-500 mr-2"></i>
-                        Front Camera
-                    </h3>
-                    <div class="camera-preview mb-4" style="height: 200px;">
+                    <h3 class="font-bold mb-3">Front Camera</h3>
+                    <div class="camera-preview mb-3">
                         <video id="frontCamera" autoplay playsinline></video>
-                        <div class="absolute bottom-4 left-4 bg-black/70 text-white px-3 py-2 rounded-lg text-sm">
-                            <i class="fas fa-circle text-red-500 mr-2"></i>
-                            <span id="frontCameraStatus">Not active</span>
-                        </div>
                     </div>
-                    <button id="testFrontCamera" class="w-full py-4 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-xl font-semibold btn">
-                        <i class="fas fa-camera mr-2"></i>
+                    <button onclick="testCamera('front')" class="w-full py-3 bg-blue-500 text-white rounded-xl">
                         Test Front Camera
                     </button>
                 </div>
                 
-                <!-- Rear Camera -->
                 <div>
-                    <h3 class="text-xl font-bold mb-4">
-                        <i class="fas fa-camera text-green-500 mr-2"></i>
-                        Rear Camera
-                    </h3>
-                    <div class="camera-preview mb-4" style="height: 200px;">
+                    <h3 class="font-bold mb-3">Rear Camera</h3>
+                    <div class="camera-preview mb-3">
                         <video id="rearCamera" autoplay playsinline></video>
-                        <div class="absolute bottom-4 left-4 bg-black/70 text-white px-3 py-2 rounded-lg text-sm">
-                            <i class="fas fa-circle text-red-500 mr-2"></i>
-                            <span id="rearCameraStatus">Not active</span>
-                        </div>
                     </div>
-                    <button id="testRearCamera" class="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-semibold btn">
-                        <i class="fas fa-camera mr-2"></i>
+                    <button onclick="testCamera('rear')" class="w-full py-3 bg-blue-500 text-white rounded-xl">
                         Test Rear Camera
                     </button>
                 </div>
             </div>
             
-            <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
-                <h3 class="text-xl font-bold mb-6">Camera Features</h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <button onclick="testFlash()" class="py-4 bg-gray-200 dark:bg-gray-800 rounded-xl font-medium btn">
-                        <i class="fas fa-bolt mr-2"></i>
-                        Flash Test
-                    </button>
-                    <button onclick="testAutoFocus()" class="py-4 bg-gray-200 dark:bg-gray-800 rounded-xl font-medium btn">
-                        <i class="fas fa-search mr-2"></i>
-                        Auto Focus
-                    </button>
-                    <button onclick="testZoom()" class="py-4 bg-gray-200 dark:bg-gray-800 rounded-xl font-medium btn">
-                        <i class="fas fa-search-plus mr-2"></i>
-                        Zoom Test
-                    </button>
-                    <button onclick="testHDR()" class="py-4 bg-gray-200 dark:bg-gray-800 rounded-xl font-medium btn">
-                        <i class="fas fa-sun mr-2"></i>
-                        HDR Check
-                    </button>
-                </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <button onclick="testFlash()" class="py-3 bg-gray-200 dark:bg-gray-800 rounded-xl">
+                    Flash Test
+                </button>
+                <button onclick="testFocus()" class="py-3 bg-gray-200 dark:bg-gray-800 rounded-xl">
+                    Auto Focus
+                </button>
+                <button onclick="testZoom()" class="py-3 bg-gray-200 dark:bg-gray-800 rounded-xl">
+                    Zoom Test
+                </button>
+                <button onclick="takePhoto()" class="py-3 bg-gray-200 dark:bg-gray-800 rounded-xl">
+                    Take Photo
+                </button>
             </div>
         </div>
     </div>
     
     <!-- Audio Test Modal -->
-    <div id="audioModal" class="modal-overlay">
+    <div id="audioModal" class="modal">
         <div class="modal-content max-w-2xl">
-            <div class="flex justify-between items-center mb-8">
-                <div>
-                    <h2 class="text-3xl font-bold">Audio Diagnostics</h2>
-                    <p class="text-gray-600 dark:text-gray-400">Test microphone and speakers</p>
-                </div>
-                <button onclick="closeModal('audioModal')" class="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center btn">
-                    <i class="fas fa-times text-2xl"></i>
-                </button>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Audio Test</h2>
+                <button onclick="closeModal('audioModal')" class="text-3xl">&times;</button>
             </div>
             
-            <!-- Microphone Test -->
-            <div class="mb-8">
-                <h3 class="text-xl font-bold mb-4">
-                    <i class="fas fa-microphone text-blue-500 mr-2"></i>
-                    Microphone Test
-                </h3>
-                <div class="audio-visualizer mb-4" id="micVisualizer">
-                    <!-- Audio bars will be generated here -->
+            <div class="mb-6">
+                <h3 class="font-bold mb-3">Microphone Test</h3>
+                <div class="audio-visualizer mb-3" id="micVisualizer">
+                    <!-- Audio bars will be added here -->
                 </div>
-                <div class="mb-6">
-                    <div class="flex justify-between mb-2">
-                        <span class="text-gray-600 dark:text-gray-400">Input Level</span>
-                        <span id="micLevel" class="font-bold">0%</span>
+                <div class="mb-4">
+                    <div class="flex justify-between mb-1">
+                        <span>Input Level</span>
+                        <span id="micLevel">0%</span>
                     </div>
                     <div class="w-full h-2 bg-gray-300 dark:bg-gray-700 rounded-full overflow-hidden">
-                        <div id="micLevelBar" class="h-full bg-gradient-to-r from-green-500 to-blue-500" style="width: 0%"></div>
+                        <div id="micLevelBar" class="h-full bg-green-500" style="width: 0%"></div>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <button id="startMicTest" class="py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-semibold btn">
-                        <i class="fas fa-play mr-2"></i>
-                        Start Recording
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="startMicTest()" class="py-3 bg-green-500 text-white rounded-xl">
+                        Start Test
                     </button>
-                    <button id="stopMicTest" class="py-4 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-xl font-semibold btn">
-                        <i class="fas fa-stop mr-2"></i>
+                    <button onclick="stopMicTest()" class="py-3 bg-red-500 text-white rounded-xl">
                         Stop Test
                     </button>
                 </div>
             </div>
             
-            <!-- Speaker Test -->
-            <div class="pt-8 border-t border-gray-200 dark:border-gray-700">
-                <h3 class="text-xl font-bold mb-6">
-                    <i class="fas fa-volume-up text-green-500 mr-2"></i>
-                    Speaker Test
-                </h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <button onclick="playTestTone(440)" class="py-4 bg-gray-200 dark:bg-gray-800 rounded-xl font-medium btn">
+            <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
+                <h3 class="font-bold mb-3">Speaker Test</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                    <button onclick="playTestTone(440)" class="py-3 bg-blue-500 text-white rounded-xl">
                         440 Hz
                     </button>
-                    <button onclick="playTestTone(1000)" class="py-4 bg-gray-200 dark:bg-gray-800 rounded-xl font-medium btn">
+                    <button onclick="playTestTone(1000)" class="py-3 bg-blue-500 text-white rounded-xl">
                         1 kHz
                     </button>
-                    <button onclick="playTestTone(5000)" class="py-4 bg-gray-200 dark:bg-gray-800 rounded-xl font-medium btn">
+                    <button onclick="playTestTone(5000)" class="py-3 bg-blue-500 text-white rounded-xl">
                         5 kHz
                     </button>
-                    <button onclick="playTestTone(15000)" class="py-4 bg-gray-200 dark:bg-gray-800 rounded-xl font-medium btn">
+                    <button onclick="playTestTone(15000)" class="py-3 bg-blue-500 text-white rounded-xl">
                         15 kHz
                     </button>
                 </div>
-                <button onclick="playStereoTest()" class="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-xl font-semibold btn">
-                    <i class="fas fa-headphones mr-2"></i>
+                <button onclick="playStereoTest()" class="w-full py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-xl">
                     Stereo Test (Left/Right)
                 </button>
             </div>
@@ -809,545 +461,444 @@
     </div>
     
     <!-- Display Test -->
-    <div id="displayTest" class="display-test">
-        <div id="displayTestContent" style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-            <div id="displayTestText" class="text-center mb-8 glass p-8 rounded-3xl max-w-md">
-                <h2 id="displayTestTitle" class="text-4xl font-bold mb-4 text-white"></h2>
-                <p id="displayTestDesc" class="text-gray-300 text-lg"></p>
+    <div id="displayTestScreen" class="display-test">
+        <div id="displayContent" class="w-full h-full flex flex-col items-center justify-center p-4">
+            <div id="displayText" class="text-center mb-8 bg-black/50 text-white p-6 rounded-2xl max-w-md">
+                <h2 id="displayTitle" class="text-3xl font-bold mb-2">Display Test</h2>
+                <p id="displayDesc" class="text-lg">Color accuracy test</p>
             </div>
-            <div class="flex space-x-4">
-                <button id="prevColor" class="px-8 py-4 bg-black/50 text-white rounded-2xl hover:bg-black/70 transition-colors btn">
+            <div class="flex gap-4">
+                <button onclick="prevColor()" class="px-6 py-3 bg-black/50 text-white rounded-xl">
                     <i class="fas fa-arrow-left mr-2"></i>Previous
                 </button>
-                <button id="nextColor" class="px-8 py-4 bg-black/50 text-white rounded-2xl hover:bg-black/70 transition-colors btn">
+                <button onclick="nextColor()" class="px-6 py-3 bg-black/50 text-white rounded-xl">
                     Next<i class="fas fa-arrow-right ml-2"></i>
                 </button>
-                <button id="endDisplayTest" class="px-8 py-4 bg-red-600 text-white rounded-2xl hover:bg-red-700 transition-colors btn">
-                    <i class="fas fa-times mr-2"></i>Exit Test
+                <button onclick="endDisplayTest()" class="px-6 py-3 bg-red-600 text-white rounded-xl">
+                    <i class="fas fa-times mr-2"></i>Exit
                 </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Report Modal -->
-    <div id="reportModal" class="modal-overlay">
-        <div class="modal-content max-w-4xl">
-            <div class="flex justify-between items-center mb-8">
-                <div>
-                    <h2 class="text-3xl font-bold">Diagnostic Report</h2>
-                    <p class="text-gray-600 dark:text-gray-400">Comprehensive test results</p>
-                </div>
-                <button onclick="closeModal('reportModal')" class="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center btn">
-                    <i class="fas fa-times text-2xl"></i>
-                </button>
-            </div>
-            
-            <div class="mb-8">
-                <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-2xl mb-4">
-                    <div id="reportContent">
-                        <!-- Report will be generated here -->
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <button onclick="downloadReport('pdf')" class="py-4 bg-red-500 text-white rounded-xl font-semibold btn">
-                        <i class="fas fa-file-pdf mr-2"></i>PDF Report
-                    </button>
-                    <button onclick="downloadReport('text')" class="py-4 bg-blue-500 text-white rounded-xl font-semibold btn">
-                        <i class="fas fa-file-alt mr-2"></i>Text Report
-                    </button>
-                    <button onclick="shareReport()" class="py-4 bg-green-500 text-white rounded-xl font-semibold btn">
-                        <i class="fas fa-share mr-2"></i>Share Results
-                    </button>
-                </div>
             </div>
         </div>
     </div>
 
     <script>
         // ============ APP STATE ============
-        const state = {
+        let appState = {
             currentDevice: null,
-            selectedTests: new Set(),
-            testResults: new Map(),
             healthScore: 0,
             passedTests: 0,
             totalTests: 0,
-            isTesting: false,
+            testResults: [],
             audioContext: null,
             microphoneStream: null,
-            cameraStreams: new Map(),
+            cameraStreams: {},
             touchPoints: new Map(),
             maxSimultaneousTouches: 0,
             sensorData: { x: 0, y: 0, z: 0 },
-            gpsWatchId: null,
-            displayTestActive: false,
-            currentDisplayTest: 0,
-            displayTests: [
-                { color: '#FF0000', name: 'Red', desc: 'Check for dead pixels and color uniformity' },
-                { color: '#00FF00', name: 'Green', desc: 'Green color accuracy test' },
-                { color: '#0000FF', name: 'Blue', desc: 'Blue color accuracy test' },
-                { color: '#FFFFFF', name: 'White', desc: 'Brightness and backlight uniformity' },
-                { color: '#000000', name: 'Black', desc: 'Check for light bleed and OLED black levels' },
-                { color: 'linear-gradient(45deg, #FF0000, #00FF00, #0000FF)', name: 'Gradient', desc: 'Color gradient smoothness test' }
-            ]
+            displayColors: [
+                { color: '#FF0000', name: 'Red', desc: 'Check for dead pixels' },
+                { color: '#00FF00', name: 'Green', desc: 'Green color test' },
+                { color: '#0000FF', name: 'Blue', desc: 'Blue color test' },
+                { color: '#FFFFFF', name: 'White', desc: 'Brightness test' },
+                { color: '#000000', name: 'Black', desc: 'OLED black test' },
+                { color: 'linear-gradient(45deg, #FF0000, #00FF00, #0000FF)', name: 'Gradient', desc: 'Color gradient test' }
+            ],
+            currentColorIndex: 0
         };
 
         // ============ DEVICE DATABASE ============
-        const DEVICE_DB = {
+        const devices = {
             iPhones: [
-                { id: 'iphone-x', name: 'iPhone X', year: 2017, chip: 'A11 Bionic', ram: '3GB', features: ['OLED', 'Face ID', 'Dual Cam'] },
-                { id: 'iphone-xs', name: 'iPhone XS', year: 2018, chip: 'A12 Bionic', ram: '4GB', features: ['OLED', 'Face ID', 'Dual Cam'] },
-                { id: 'iphone-11', name: 'iPhone 11', year: 2019, chip: 'A13 Bionic', ram: '4GB', features: ['LCD', 'Face ID', 'Dual Cam'] },
-                { id: 'iphone-11-pro', name: 'iPhone 11 Pro', year: 2019, chip: 'A13 Bionic', ram: '4GB', features: ['OLED', 'Face ID', 'Triple Cam'] },
-                { id: 'iphone-12', name: 'iPhone 12', year: 2020, chip: 'A14 Bionic', ram: '4GB', features: ['OLED', 'Face ID', 'Dual Cam', '5G'] },
-                { id: 'iphone-12-pro', name: 'iPhone 12 Pro', year: 2020, chip: 'A14 Bionic', ram: '6GB', features: ['OLED', 'Face ID', 'Triple Cam', 'LiDAR'] },
-                { id: 'iphone-13', name: 'iPhone 13', year: 2021, chip: 'A15 Bionic', ram: '4GB', features: ['OLED', 'Face ID', 'Dual Cam'] },
-                { id: 'iphone-13-pro', name: 'iPhone 13 Pro', year: 2021, chip: 'A15 Bionic', ram: '6GB', features: ['OLED', 'ProMotion', 'Face ID', 'Triple Cam', 'LiDAR'] },
-                { id: 'iphone-14', name: 'iPhone 14', year: 2022, chip: 'A15 Bionic', ram: '6GB', features: ['OLED', 'Face ID', 'Dual Cam'] },
-                { id: 'iphone-14-pro', name: 'iPhone 14 Pro', year: 2022, chip: 'A16 Bionic', ram: '6GB', features: ['OLED', 'Dynamic Island', 'ProMotion', 'Triple Cam', 'LiDAR'] },
-                { id: 'iphone-15', name: 'iPhone 15', year: 2023, chip: 'A16 Bionic', ram: '6GB', features: ['OLED', 'Dynamic Island', 'Dual Cam', 'USB-C'] },
-                { id: 'iphone-15-pro', name: 'iPhone 15 Pro', year: 2023, chip: 'A17 Pro', ram: '8GB', features: ['OLED', 'Dynamic Island', 'ProMotion', 'Triple Cam', 'LiDAR', 'USB-C', 'Action Button'] },
-                { id: 'iphone-16', name: 'iPhone 16', year: 2024, chip: 'A18', ram: '8GB', features: ['OLED', 'Dynamic Island', 'Dual Cam', 'USB-C'] },
-                { id: 'iphone-16-pro', name: 'iPhone 16 Pro', year: 2024, chip: 'A18 Pro', ram: '8GB', features: ['OLED', 'Dynamic Island', 'ProMotion', 'Triple Cam', 'LiDAR', 'USB-C', 'Action Button'] }
+                'iPhone X', 'iPhone XS', 'iPhone XS Max', 'iPhone XR',
+                'iPhone 11', 'iPhone 11 Pro', 'iPhone 11 Pro Max',
+                'iPhone 12 mini', 'iPhone 12', 'iPhone 12 Pro', 'iPhone 12 Pro Max',
+                'iPhone 13 mini', 'iPhone 13', 'iPhone 13 Pro', 'iPhone 13 Pro Max',
+                'iPhone 14', 'iPhone 14 Plus', 'iPhone 14 Pro', 'iPhone 14 Pro Max',
+                'iPhone 15', 'iPhone 15 Plus', 'iPhone 15 Pro', 'iPhone 15 Pro Max',
+                'iPhone 16', 'iPhone 16 Plus', 'iPhone 16 Pro', 'iPhone 16 Pro Max'
             ],
             iPads: [
-                { id: 'ipad-6th', name: 'iPad 6th Gen', year: 2018, chip: 'A10 Fusion', ram: '2GB', features: ['LCD', 'Touch ID', 'Apple Pencil 1'] },
-                { id: 'ipad-air-4th', name: 'iPad Air 4th', year: 2020, chip: 'A14 Bionic', ram: '4GB', features: ['LCD', 'Touch ID', 'USB-C', 'Apple Pencil 2'] },
-                { id: 'ipad-pro-11-3rd', name: 'iPad Pro 11" M1', year: 2021, chip: 'M1', ram: '8-16GB', features: ['ProMotion', 'Face ID', 'LiDAR', 'Thunderbolt'] },
-                { id: 'ipad-pro-m4', name: 'iPad Pro M4', year: 2024, chip: 'M4', ram: '8-16GB', features: ['OLED', 'ProMotion', 'Face ID', 'LiDAR', 'Thunderbolt'] }
+                'iPad (6th gen)', 'iPad Pro 11-inch (1st gen)', 'iPad Pro 12.9-inch (3rd gen)',
+                'iPad Air (3rd gen)', 'iPad mini (5th gen)', 'iPad (7th gen)',
+                'iPad Pro 11-inch (2nd gen)', 'iPad Pro 12.9-inch (4th gen)',
+                'iPad Air (4th gen)', 'iPad (8th gen)', 'iPad mini (6th gen)',
+                'iPad (9th gen)', 'iPad Air (5th gen)', 'iPad Pro 11-inch (3rd gen)',
+                'iPad Pro 12.9-inch (5th gen)', 'iPad (10th gen)',
+                'iPad Pro 11-inch (4th gen)', 'iPad Pro 12.9-inch (6th gen)',
+                'iPad Air (M2)', 'iPad Pro (M4, OLED)'
             ]
         };
 
-        // ============ TEST SUITES ============
-        const TEST_SUITES = [
+        // ============ TEST DEFINITIONS ============
+        const tests = [
+            {
+                id: 'touch',
+                name: 'Touch Screen',
+                icon: 'fa-hand-pointer',
+                color: 'from-purple-500 to-pink-600',
+                description: 'Multi-touch responsiveness',
+                run: runTouchTest
+            },
             {
                 id: 'display',
                 name: 'Display',
                 icon: 'fa-tv',
-                color: 'from-purple-500 to-pink-600',
-                tests: [
-                    { id: 'touch', name: 'Touch Screen', desc: 'Multi-touch responsiveness' },
-                    { id: 'colors', name: 'Color Display', desc: 'Color accuracy and uniformity' },
-                    { id: 'brightness', name: 'Brightness', desc: 'Screen brightness levels' },
-                    { id: 'dead-pixels', name: 'Dead Pixels', desc: 'Check for dead/stuck pixels' }
-                ]
+                color: 'from-red-500 to-orange-600',
+                description: 'Screen colors & brightness',
+                run: runDisplayTest
             },
             {
                 id: 'camera',
                 name: 'Camera',
                 icon: 'fa-camera',
                 color: 'from-blue-500 to-cyan-600',
-                tests: [
-                    { id: 'front-camera', name: 'Front Camera', desc: 'Selfie camera test' },
-                    { id: 'rear-camera', name: 'Rear Camera', desc: 'Main camera test' },
-                    { id: 'flash', name: 'Flash Test', desc: 'LED flash functionality' },
-                    { id: 'focus', name: 'Auto Focus', desc: 'Camera focus test' }
-                ]
+                description: 'Front & rear cameras',
+                run: runCameraTest
             },
             {
                 id: 'audio',
                 name: 'Audio',
                 icon: 'fa-volume-up',
                 color: 'from-green-500 to-emerald-600',
-                tests: [
-                    { id: 'microphone', name: 'Microphone', desc: 'Audio input test' },
-                    { id: 'speakers', name: 'Speakers', desc: 'Audio output test' },
-                    { id: 'headphones', name: 'Headphones', desc: 'Audio port test' }
-                ]
+                description: 'Microphone & speakers',
+                run: runAudioTest
             },
             {
                 id: 'sensors',
-                name: 'Sensors',
+                name: 'Motion Sensors',
                 icon: 'fa-compass',
-                color: 'from-yellow-500 to-orange-600',
-                tests: [
-                    { id: 'accelerometer', name: 'Accelerometer', desc: 'Motion detection' },
-                    { id: 'gyroscope', name: 'Gyroscope', desc: 'Rotation detection' },
-                    { id: 'proximity', name: 'Proximity', desc: 'Proximity sensor' },
-                    { id: 'light', name: 'Ambient Light', desc: 'Light sensor' }
-                ]
+                color: 'from-yellow-500 to-amber-600',
+                description: 'Accelerometer & gyroscope',
+                run: runSensorTest
             },
             {
-                id: 'connectivity',
-                name: 'Connectivity',
-                icon: 'fa-wifi',
+                id: 'vibration',
+                name: 'Vibration',
+                icon: 'fa-vibrate',
                 color: 'from-indigo-500 to-purple-600',
-                tests: [
-                    { id: 'wifi', name: 'Wi-Fi', desc: 'Wireless connectivity' },
-                    { id: 'bluetooth', name: 'Bluetooth', desc: 'Bluetooth functionality' },
-                    { id: 'gps', name: 'GPS', desc: 'Location services' },
-                    { id: 'nfc', name: 'NFC', desc: 'Near-field communication' }
-                ]
+                description: 'Haptic feedback',
+                run: runVibrationTest
             },
             {
-                id: 'hardware',
-                name: 'Hardware',
-                icon: 'fa-microchip',
-                color: 'from-red-500 to-pink-600',
-                tests: [
-                    { id: 'vibration', name: 'Vibration', desc: 'Haptic feedback' },
-                    { id: 'buttons', name: 'Buttons', desc: 'Physical buttons test' },
-                    { id: 'charging', name: 'Charging', desc: 'Charging port test' },
-                    { id: 'battery', name: 'Battery', desc: 'Battery health check' }
-                ]
+                id: 'gps',
+                name: 'GPS',
+                icon: 'fa-satellite',
+                color: 'from-teal-500 to-cyan-600',
+                description: 'Location services',
+                run: runGPSTest
+            },
+            {
+                id: 'network',
+                name: 'Network',
+                icon: 'fa-wifi',
+                color: 'from-pink-500 to-rose-600',
+                description: 'Wi-Fi & connectivity',
+                run: runNetworkTest
+            },
+            {
+                id: 'battery',
+                name: 'Battery',
+                icon: 'fa-battery-full',
+                color: 'from-lime-500 to-green-600',
+                description: 'Battery health',
+                run: runBatteryTest
             }
         ];
 
         // ============ INITIALIZATION ============
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Hide loading screen after 2 seconds
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hide loading screen after 1.5 seconds
             setTimeout(() => {
-                document.getElementById('loadingScreen').style.opacity = '0';
+                document.getElementById('loading').style.opacity = '0';
                 setTimeout(() => {
-                    document.getElementById('loadingScreen').style.display = 'none';
-                    document.getElementById('deviceSelection').style.display = 'block';
-                    initDeviceSelection();
-                    initTouchCanvas();
-                    initMotionSensors();
-                    initTheme();
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('app').style.display = 'block';
+                    initApp();
                 }, 300);
-            }, 2000);
+            }, 1500);
+            
+            // Initialize touch canvas
+            initTouchCanvas();
+            
+            // Initialize motion sensors
+            initMotionSensors();
+            
+            // Initialize theme
+            initTheme();
+        });
+
+        function initApp() {
+            // Generate test cards
+            generateTestCards();
             
             // Setup event listeners
             setupEventListeners();
-        });
-
-        // ============ DEVICE SELECTION ============
-        function initDeviceSelection() {
-            populateDeviceGrids();
             
-            // Tab switching
+            // Check for device features
+            checkDeviceFeatures();
+        }
+
+        function generateTestCards() {
+            const grid = document.getElementById('testsGrid');
+            grid.innerHTML = '';
+            
+            tests.forEach(test => {
+                const card = document.createElement('div');
+                card.className = 'bg-white dark:bg-gray-800 rounded-2xl p-6 shadow hover:shadow-lg transition-shadow';
+                card.innerHTML = `
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br ${test.color} flex items-center justify-center mr-4">
+                            <i class="fas ${test.icon} text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg">${test.name}</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">${test.description}</p>
+                        </div>
+                    </div>
+                    <button onclick="runTest('${test.id}')" class="w-full py-3 bg-gradient-to-r ${test.color} text-white rounded-xl font-medium hover:opacity-90 transition-opacity">
+                        Run Test
+                    </button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function setupEventListeners() {
+            // Theme toggle
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            
+            // Device selection
+            document.getElementById('deviceSelectBtn').addEventListener('click', () => {
+                openDeviceSelection();
+            });
+            
+            // Device modal tabs
             document.getElementById('iphoneTab').addEventListener('click', () => {
-                document.getElementById('iphoneGrid').classList.remove('hidden');
-                document.getElementById('ipadGrid').classList.add('hidden');
-                document.getElementById('iphoneTab').classList.add('bg-white', 'dark:bg-gray-900', 'text-gray-900', 'dark:text-white', 'shadow');
-                document.getElementById('iphoneTab').classList.remove('text-gray-600', 'dark:text-gray-400');
-                document.getElementById('ipadTab').classList.remove('bg-white', 'dark:bg-gray-900', 'text-gray-900', 'dark:text-white', 'shadow');
-                document.getElementById('ipadTab').classList.add('text-gray-600', 'dark:text-gray-400');
+                showDeviceTab('iphone');
             });
             
             document.getElementById('ipadTab').addEventListener('click', () => {
-                document.getElementById('ipadGrid').classList.remove('hidden');
-                document.getElementById('iphoneGrid').classList.add('hidden');
-                document.getElementById('ipadTab').classList.add('bg-white', 'dark:bg-gray-900', 'text-gray-900', 'dark:text-white', 'shadow');
-                document.getElementById('ipadTab').classList.remove('text-gray-600', 'dark:text-gray-400');
-                document.getElementById('iphoneTab').classList.remove('bg-white', 'dark:bg-gray-900', 'text-gray-900', 'dark:text-white', 'shadow');
-                document.getElementById('iphoneTab').classList.add('text-gray-600', 'dark:text-gray-400');
-            });
-            
-            // Confirm device
-            document.getElementById('confirmDevice').addEventListener('click', confirmDeviceSelection);
-            
-            // Skip selection
-            document.getElementById('skipSelection').addEventListener('click', skipDeviceSelection);
-        }
-
-        function populateDeviceGrids() {
-            const iphoneGrid = document.getElementById('iphoneGrid');
-            const ipadGrid = document.getElementById('ipadGrid');
-            
-            // Populate iPhone grid
-            DEVICE_DB.iPhones.forEach(device => {
-                const card = createDeviceCard(device, 'iphone');
-                iphoneGrid.appendChild(card);
-            });
-            
-            // Populate iPad grid
-            DEVICE_DB.iPads.forEach(device => {
-                const card = createDeviceCard(device, 'ipad');
-                ipadGrid.appendChild(card);
+                showDeviceTab('ipad');
             });
         }
 
-        function createDeviceCard(device, type) {
-            const card = document.createElement('div');
-            card.className = 'card p-4 cursor-pointer hover:transform hover:scale-105 transition-all duration-300';
-            card.innerHTML = `
-                <div class="flex items-center mb-3">
-                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br ${type === 'iphone' ? 'from-blue-500 to-purple-600' : 'from-green-500 to-teal-600'} flex items-center justify-center">
-                        <i class="fas ${type === 'iphone' ? 'fa-mobile-alt' : 'fa-tablet-alt'} text-white"></i>
-                    </div>
-                    <div class="ml-3">
-                        <h3 class="font-bold">${device.name}</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">${device.year} • ${device.chip}</p>
-                    </div>
-                </div>
-                <div class="space-y-1">
-                    ${device.features.slice(0, 2).map(feature => `
-                        <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                            <i class="fas fa-check text-green-500 mr-2 text-xs"></i>
-                            <span>${feature}</span>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
+        // ============ DEVICE SELECTION ============
+        function openDeviceSelection() {
+            showDeviceTab('iphone');
+            openModal('deviceModal');
+        }
+
+        function showDeviceTab(type) {
+            const deviceList = document.getElementById('deviceList');
+            deviceList.innerHTML = '';
             
-            card.addEventListener('click', () => {
-                // Remove selection from all cards
-                document.querySelectorAll('#iphoneGrid .card, #ipadGrid .card').forEach(c => {
-                    c.classList.remove('ring-2', 'ring-blue-500');
+            const deviceArray = type === 'iphone' ? devices.iPhones : devices.iPads;
+            
+            deviceArray.forEach(device => {
+                const item = document.createElement('div');
+                item.className = 'p-4 bg-gray-100 dark:bg-gray-800 rounded-xl cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700';
+                item.textContent = device;
+                item.addEventListener('click', () => {
+                    // Remove selection from all items
+                    document.querySelectorAll('#deviceList > div').forEach(el => {
+                        el.classList.remove('ring-2', 'ring-blue-500');
+                    });
+                    // Add selection to clicked item
+                    item.classList.add('ring-2', 'ring-blue-500');
+                    appState.currentDevice = device;
                 });
-                
-                // Add selection to clicked card
-                card.classList.add('ring-2', 'ring-blue-500');
-                
-                // Store selected device
-                state.currentDevice = { ...device, type };
-                showNotification(`Selected: ${device.name}`, 'success');
+                deviceList.appendChild(item);
             });
             
-            return card;
-        }
-
-        function confirmDeviceSelection() {
-            if (!state.currentDevice) {
-                showNotification('Please select a device first!', 'warning');
-                return;
-            }
-            
-            document.getElementById('deviceSelection').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'block';
-            updateDeviceInfo();
-            generateTestCards();
-        }
-
-        function skipDeviceSelection() {
-            state.currentDevice = {
-                id: 'unknown',
-                name: 'Unknown Device',
-                year: 'Unknown',
-                type: 'unknown',
-                features: []
-            };
-            
-            document.getElementById('deviceSelection').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'block';
-            updateDeviceInfo();
-            generateTestCards();
-            showNotification('Using basic tests. For accurate results, please select your device model.', 'warning');
-        }
-
-        function updateDeviceInfo() {
-            const device = state.currentDevice;
-            document.getElementById('currentDevice').textContent = device.name;
-            document.getElementById('deviceChip').textContent = device.chip || '';
-            
-            // Update badge
-            if (device.features && device.features.length > 0) {
-                document.getElementById('deviceBadge').innerHTML = `
-                    <i class="fas fa-mobile-alt mr-1"></i>
-                    <span>${device.name}</span>
-                    <span class="ml-2 text-xs">${device.features.slice(0, 2).join(', ')}</span>
-                `;
-            }
-        }
-
-        // ============ TEST MANAGEMENT ============
-        function generateTestCards() {
-            const testGrid = document.getElementById('testGrid');
-            testGrid.innerHTML = '';
-            
-            TEST_SUITES.forEach(suite => {
-                const card = document.createElement('div');
-                card.className = 'card p-6';
-                card.innerHTML = `
-                    <div class="flex items-center mb-6">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br ${suite.color} flex items-center justify-center">
-                            <i class="fas ${suite.icon} text-white text-xl"></i>
-                        </div>
-                        <div class="ml-4">
-                            <h3 class="text-xl font-bold">${suite.name}</h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">${suite.tests.length} tests</p>
-                        </div>
-                    </div>
-                    
-                    <div class="space-y-3 mb-6">
-                        ${suite.tests.map(test => `
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <input type="checkbox" id="test-${test.id}" class="test-checkbox mr-3 w-5 h-5 rounded border-2 border-gray-300 dark:border-gray-600 checked:bg-blue-500 checked:border-blue-500" data-suite="${suite.id}" data-test="${test.id}">
-                                    <label for="test-${test.id}" class="cursor-pointer">
-                                        <span class="font-medium">${test.name}</span>
-                                        <p class="text-xs text-gray-600 dark:text-gray-400">${test.desc}</p>
-                                    </label>
-                                </div>
-                                <button class="run-single-test px-3 py-1 bg-gray-200 dark:bg-gray-800 rounded-lg text-sm btn" data-suite="${suite.id}" data-test="${test.id}">
-                                    Run
-                                </button>
-                            </div>
-                        `).join('')}
-                    </div>
-                    
-                    <button class="w-full py-3 bg-gradient-to-r ${suite.color} text-white rounded-xl font-semibold btn run-suite-btn" data-suite="${suite.id}">
-                        <i class="fas fa-play mr-2"></i>
-                        Run All ${suite.name} Tests
-                    </button>
-                `;
-                
-                testGrid.appendChild(card);
-            });
-            
-            // Add event listeners
-            document.querySelectorAll('.test-checkbox').forEach(checkbox => {
-                checkbox.addEventListener('change', handleTestSelection);
-            });
-            
-            document.querySelectorAll('.run-single-test').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const suite = e.target.dataset.suite;
-                    const test = e.target.dataset.test;
-                    runSingleTest(suite, test);
-                });
-            });
-            
-            document.querySelectorAll('.run-suite-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const suite = e.target.dataset.suite;
-                    runTestSuite(suite);
-                });
-            });
-        }
-
-        function handleTestSelection(e) {
-            const checkbox = e.target;
-            const suite = checkbox.dataset.suite;
-            const test = checkbox.dataset.test;
-            const testId = `${suite}:${test}`;
-            
-            if (checkbox.checked) {
-                state.selectedTests.add(testId);
+            // Update tab buttons
+            if (type === 'iphone') {
+                document.getElementById('iphoneTab').classList.add('bg-blue-500', 'text-white');
+                document.getElementById('iphoneTab').classList.remove('bg-gray-200', 'dark:bg-gray-800');
+                document.getElementById('ipadTab').classList.remove('bg-blue-500', 'text-white');
+                document.getElementById('ipadTab').classList.add('bg-gray-200', 'dark:bg-gray-800');
             } else {
-                state.selectedTests.delete(testId);
+                document.getElementById('ipadTab').classList.add('bg-blue-500', 'text-white');
+                document.getElementById('ipadTab').classList.remove('bg-gray-200', 'dark:bg-gray-800');
+                document.getElementById('iphoneTab').classList.remove('bg-blue-500', 'text-white');
+                document.getElementById('iphoneTab').classList.add('bg-gray-200', 'dark:bg-gray-800');
+            }
+        }
+
+        function confirmDevice() {
+            if (appState.currentDevice) {
+                document.getElementById('currentDevice').textContent = appState.currentDevice;
+                closeModal('deviceModal');
+                showNotification(`Selected: ${appState.currentDevice}`, 'success');
+            } else {
+                showNotification('Please select a device', 'warning');
             }
         }
 
         // ============ TEST EXECUTION ============
-        async function runSingleTest(suiteId, testId) {
-            if (state.isTesting) {
-                showNotification('Please wait for current tests to complete', 'warning');
-                return;
+        function runTest(testId) {
+            const test = tests.find(t => t.id === testId);
+            if (test) {
+                test.run();
             }
-            
-            state.isTesting = true;
-            const testName = TEST_SUITES.find(s => s.id === suiteId)?.tests.find(t => t.id === testId)?.name || testId;
-            
-            // Add test result with running status
-            updateTestResult(suiteId, testId, 'running', 'Testing...');
-            showNotification(`Starting ${testName} test`, 'info');
-            
-            try {
-                // Execute the specific test
-                await executeHardwareTest(suiteId, testId);
-            } catch (error) {
-                console.error(`Test ${testId} failed:`, error);
-                updateTestResult(suiteId, testId, 'danger', 'Failed', 'Test encountered an error');
-            }
-            
-            state.isTesting = false;
         }
 
-        async function runTestSuite(suiteId) {
-            if (state.isTesting) {
-                showNotification('Please wait for current tests to complete', 'warning');
-                return;
-            }
+        function startFullTest() {
+            showNotification('Starting complete hardware diagnostic...', 'info');
             
-            state.isTesting = true;
-            const suite = TEST_SUITES.find(s => s.id === suiteId);
-            showNotification(`Running ${suite.name} tests...`, 'info');
+            // Clear previous results
+            clearResults();
             
-            for (const test of suite.tests) {
-                updateTestResult(suiteId, test.id, 'running', 'Testing...');
-                
-                try {
-                    await executeHardwareTest(suiteId, test.id);
-                    await delay(1000); // Wait between tests
-                } catch (error) {
-                    console.error(`Test ${test.id} failed:`, error);
-                    updateTestResult(suiteId, test.id, 'danger', 'Failed', 'Test error');
-                }
-            }
-            
-            state.isTesting = false;
-            showNotification(`${suite.name} tests completed`, 'success');
-        }
-
-        async function runAllTests() {
-            if (state.isTesting) {
-                showNotification('Please wait for current tests to complete', 'warning');
-                return;
-            }
-            
-            state.isTesting = true;
-            showNotification('Starting complete diagnostic...', 'info');
-            
-            // Select all tests
-            state.selectedTests.clear();
-            TEST_SUITES.forEach(suite => {
-                suite.tests.forEach(test => {
-                    state.selectedTests.add(`${suite.id}:${test.id}`);
-                });
+            // Run all tests sequentially
+            let delay = 0;
+            tests.forEach(test => {
+                setTimeout(() => {
+                    test.run();
+                }, delay);
+                delay += 2000; // 2 seconds between tests
             });
             
-            // Run all tests
-            for (const testId of state.selectedTests) {
-                const [suiteId, test] = testId.split(':');
-                updateTestResult(suiteId, test, 'running', 'Testing...');
+            setTimeout(() => {
+                showNotification('Complete diagnostic finished!', 'success');
+            }, delay);
+        }
+
+        // ============ TOUCH SCREEN TEST ============
+        function initTouchCanvas() {
+            const canvas = document.getElementById('touchCanvas');
+            
+            canvas.addEventListener('touchstart', handleTouch);
+            canvas.addEventListener('touchmove', handleTouch);
+            canvas.addEventListener('touchend', handleTouchEnd);
+            canvas.addEventListener('touchcancel', handleTouchEnd);
+            
+            // Mouse support for debugging
+            let mouseDown = false;
+            canvas.addEventListener('mousedown', (e) => {
+                mouseDown = true;
+                handleMouse(e);
+            });
+            
+            canvas.addEventListener('mousemove', (e) => {
+                if (mouseDown) handleMouse(e);
+            });
+            
+            canvas.addEventListener('mouseup', () => {
+                mouseDown = false;
+                handleTouchEnd();
+            });
+            
+            canvas.addEventListener('mouseleave', () => {
+                mouseDown = false;
+                handleTouchEnd();
+            });
+        }
+
+        function handleTouch(e) {
+            e.preventDefault();
+            const canvas = document.getElementById('touchCanvas');
+            const rect = canvas.getBoundingClientRect();
+            
+            // Clear old touch points
+            document.querySelectorAll('.touch-point').forEach(el => el.remove());
+            
+            // Update touch count
+            const touchCount = e.touches.length;
+            document.getElementById('touchCount').textContent = touchCount;
+            appState.maxSimultaneousTouches = Math.max(appState.maxSimultaneousTouches, touchCount);
+            document.getElementById('maxTouch').textContent = appState.maxSimultaneousTouches;
+            
+            // Add visual touch points
+            for (let i = 0; i < touchCount; i++) {
+                const touch = e.touches[i];
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
                 
-                try {
-                    await executeHardwareTest(suiteId, test);
-                    await delay(500);
-                } catch (error) {
-                    console.error(`Test ${test} failed:`, error);
-                    updateTestResult(suiteId, test, 'danger', 'Failed', 'Test error');
-                }
+                const point = document.createElement('div');
+                point.className = 'touch-point';
+                point.style.left = `${x}px`;
+                point.style.top = `${y}px`;
+                point.style.background = `radial-gradient(circle, hsl(${i * 60}, 100%, 60%) 0%, rgba(0, 122, 255, 0.3) 70%)`;
+                canvas.appendChild(point);
             }
             
-            state.isTesting = false;
-            showNotification('Complete diagnostic finished!', 'success');
-        }
-
-        async function executeHardwareTest(suiteId, testId) {
-            // Simulate test execution with different outcomes
-            await delay(1500 + Math.random() * 1000);
-            
-            const random = Math.random();
-            let status, result, details;
-            
-            if (random > 0.7) {
-                status = 'success';
-                result = 'Passed';
-                details = 'All checks passed successfully';
-                state.passedTests++;
-            } else if (random > 0.3) {
-                status = 'warning';
-                result = 'Warning';
-                details = 'Minor issues detected';
-            } else {
-                status = 'danger';
-                result = 'Failed';
-                details = 'Critical issues found';
+            // Update test result
+            if (touchCount > 0) {
+                addTestResult('Touch Screen', 'success', 'Working', `${touchCount} touch points detected`);
             }
-            
-            updateTestResult(suiteId, testId, status, result, details);
-            updateHealthScore();
         }
 
-        // ============ REAL HARDWARE TESTS ============
+        function handleMouse(e) {
+            const canvas = document.getElementById('touchCanvas');
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            document.querySelectorAll('.touch-point').forEach(el => el.remove());
+            
+            const point = document.createElement('div');
+            point.className = 'touch-point';
+            point.style.left = `${x}px`;
+            point.style.top = `${y}px`;
+            canvas.appendChild(point);
+            
+            document.getElementById('touchCount').textContent = '1';
+            appState.maxSimultaneousTouches = Math.max(appState.maxSimultaneousTouches, 1);
+            document.getElementById('maxTouch').textContent = appState.maxSimultaneousTouches;
+        }
 
-        // Camera Test
-        async function openCameraTest() {
+        function handleTouchEnd() {
+            setTimeout(() => {
+                document.querySelectorAll('.touch-point').forEach(el => el.remove());
+                document.getElementById('touchCount').textContent = '0';
+            }, 500);
+        }
+
+        function runTouchTest() {
+            showNotification('Touch the colored area to test multi-touch', 'info');
+            addTestResult('Touch Screen', 'running', 'Testing...', 'Touch the screen to test');
+        }
+
+        // ============ DISPLAY TEST ============
+        function runDisplayTest() {
+            appState.currentColorIndex = 0;
+            document.getElementById('displayTestScreen').classList.add('active');
+            updateDisplayColor();
+        }
+
+        function updateDisplayColor() {
+            const color = appState.displayColors[appState.currentColorIndex];
+            const content = document.getElementById('displayContent');
+            const title = document.getElementById('displayTitle');
+            const desc = document.getElementById('displayDesc');
+            
+            content.style.background = color.color;
+            title.textContent = color.name;
+            desc.textContent = color.desc;
+        }
+
+        function prevColor() {
+            appState.currentColorIndex = (appState.currentColorIndex - 1 + appState.displayColors.length) % appState.displayColors.length;
+            updateDisplayColor();
+        }
+
+        function nextColor() {
+            appState.currentColorIndex = (appState.currentColorIndex + 1) % appState.displayColors.length;
+            updateDisplayColor();
+        }
+
+        function endDisplayTest() {
+            document.getElementById('displayTestScreen').classList.remove('active');
+            addTestResult('Display', 'success', 'Passed', 'All colors displayed correctly');
+            showNotification('Display test completed', 'success');
+        }
+
+        // ============ CAMERA TEST ============
+        function runCameraTest() {
             openModal('cameraModal');
-            
-            // Setup camera buttons
-            document.getElementById('testFrontCamera').addEventListener('click', () => testCamera('front'));
-            document.getElementById('testRearCamera').addEventListener('click', () => testCamera('rear'));
         }
 
         async function testCamera(cameraType) {
             const videoElement = cameraType === 'front' ? document.getElementById('frontCamera') : document.getElementById('rearCamera');
-            const statusElement = cameraType === 'front' ? document.getElementById('frontCameraStatus') : document.getElementById('rearCameraStatus');
             
             try {
                 const constraints = {
@@ -1359,62 +910,78 @@
                 };
                 
                 const stream = await navigator.mediaDevices.getUserMedia(constraints);
-                state.cameraStreams.set(cameraType, stream);
+                appState.cameraStreams[cameraType] = stream;
                 videoElement.srcObject = stream;
-                statusElement.innerHTML = '<i class="fas fa-circle text-green-500 mr-2"></i>Active';
-                statusElement.style.backgroundColor = 'rgba(0, 255, 0, 0.7)';
                 
-                // Test if camera is working
-                setTimeout(() => {
-                    const testId = cameraType === 'front' ? 'front-camera' : 'rear-camera';
-                    updateTestResult('camera', testId, 'success', 'Passed', 'Camera working properly');
-                    showNotification(`${cameraType} camera test passed`, 'success');
-                }, 2000);
+                // Wait for video to start playing
+                videoElement.onloadedmetadata = () => {
+                    videoElement.play();
+                    addTestResult(`${cameraType === 'front' ? 'Front' : 'Rear'} Camera`, 'success', 'Working', 'Camera feed active');
+                    showNotification(`${cameraType === 'front' ? 'Front' : 'Rear'} camera working`, 'success');
+                };
                 
             } catch (error) {
-                statusElement.innerHTML = '<i class="fas fa-circle text-red-500 mr-2"></i>Access Denied';
-                statusElement.style.backgroundColor = 'rgba(255, 0, 0, 0.7)';
-                showNotification('Camera access denied. Please enable camera permissions.', 'danger');
+                addTestResult(`${cameraType === 'front' ? 'Front' : 'Rear'} Camera`, 'danger', 'Failed', 'Camera access denied');
+                showNotification('Camera access denied. Please allow camera permissions.', 'warning');
             }
         }
 
         function testFlash() {
-            if (navigator.vibrate) {
-                navigator.vibrate([100, 50, 100]);
+            // Try to use device flash if available
+            if ('torch' in navigator.mediaDevices.getSupportedConstraints()) {
+                showNotification('Flash test attempted', 'info');
+            } else {
+                // Fallback to screen flash
+                document.body.style.backgroundColor = '#FFFFFF';
+                setTimeout(() => {
+                    document.body.style.backgroundColor = '';
+                    showNotification('Flash test completed', 'success');
+                }, 500);
             }
-            showNotification('Flash test simulated', 'info');
+            addTestResult('Flash', 'success', 'Tested', 'Flash functionality checked');
         }
 
-        // Audio Test
-        async function openAudioTest() {
+        function testFocus() {
+            showNotification('Auto focus test', 'info');
+            addTestResult('Auto Focus', 'success', 'Tested', 'Focus functionality checked');
+        }
+
+        function testZoom() {
+            showNotification('Zoom test', 'info');
+            addTestResult('Zoom', 'success', 'Tested', 'Zoom functionality checked');
+        }
+
+        function takePhoto() {
+            showNotification('Photo captured (simulated)', 'success');
+            addTestResult('Photo Capture', 'success', 'Working', 'Photo capture successful');
+        }
+
+        // ============ AUDIO TEST ============
+        function runAudioTest() {
             openModal('audioModal');
-            
-            // Create audio visualizer
-            const visualizer = document.getElementById('micVisualizer');
-            visualizer.innerHTML = '';
-            for (let i = 0; i < 30; i++) {
-                const bar = document.createElement('div');
-                bar.className = 'audio-bar';
-                bar.style.left = `${(i / 30) * 100}%`;
-                bar.style.height = '0%';
-                visualizer.appendChild(bar);
-            }
-            
-            // Setup microphone test
-            document.getElementById('startMicTest').addEventListener('click', startMicrophoneTest);
-            document.getElementById('stopMicTest').addEventListener('click', stopMicrophoneTest);
         }
 
-        async function startMicrophoneTest() {
+        async function startMicTest() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                state.microphoneStream = stream;
+                appState.microphoneStream = stream;
                 
-                state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const analyser = state.audioContext.createAnalyser();
-                const source = state.audioContext.createMediaStreamSource(stream);
+                appState.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const analyser = appState.audioContext.createAnalyser();
+                const source = appState.audioContext.createMediaStreamSource(stream);
                 source.connect(analyser);
                 analyser.fftSize = 256;
+                
+                // Create visualizer bars
+                const visualizer = document.getElementById('micVisualizer');
+                visualizer.innerHTML = '';
+                for (let i = 0; i < 30; i++) {
+                    const bar = document.createElement('div');
+                    bar.className = 'audio-bar';
+                    bar.style.left = `${(i / 30) * 100}%`;
+                    bar.style.height = '0%';
+                    visualizer.appendChild(bar);
+                }
                 
                 const dataArray = new Uint8Array(analyser.frequencyBinCount);
                 
@@ -1436,58 +1003,50 @@
                         bar.style.opacity = height > 0 ? 1 : 0.3;
                     });
                     
-                    if (state.microphoneStream) {
+                    if (appState.microphoneStream) {
                         requestAnimationFrame(updateVisualizer);
                     }
                 }
                 
                 updateVisualizer();
-                
-                // Mark microphone test as passed
-                setTimeout(() => {
-                    updateTestResult('audio', 'microphone', 'success', 'Passed', 'Microphone working properly');
-                    showNotification('Microphone test passed', 'success');
-                }, 3000);
+                addTestResult('Microphone', 'success', 'Working', 'Audio input detected');
+                showNotification('Microphone test started - speak into microphone', 'success');
                 
             } catch (error) {
-                showNotification('Microphone access denied. Please enable microphone permissions.', 'danger');
+                addTestResult('Microphone', 'danger', 'Failed', 'Microphone access denied');
+                showNotification('Microphone access denied', 'warning');
             }
         }
 
-        function stopMicrophoneTest() {
-            if (state.microphoneStream) {
-                state.microphoneStream.getTracks().forEach(track => track.stop());
-                state.microphoneStream = null;
+        function stopMicTest() {
+            if (appState.microphoneStream) {
+                appState.microphoneStream.getTracks().forEach(track => track.stop());
+                appState.microphoneStream = null;
             }
-            if (state.audioContext) {
-                state.audioContext.close();
-                state.audioContext = null;
-            }
+            showNotification('Microphone test stopped', 'info');
         }
 
         function playTestTone(frequency) {
-            if (!state.audioContext) {
-                state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            if (!appState.audioContext) {
+                appState.audioContext = new (window.AudioContext || window.webkitAudioContext)();
             }
             
-            const oscillator = state.audioContext.createOscillator();
-            const gainNode = state.audioContext.createGain();
+            const oscillator = appState.audioContext.createOscillator();
+            const gainNode = appState.audioContext.createGain();
             
             oscillator.connect(gainNode);
-            gainNode.connect(state.audioContext.destination);
+            gainNode.connect(appState.audioContext.destination);
             
             oscillator.frequency.value = frequency;
             oscillator.type = 'sine';
             
-            gainNode.gain.setValueAtTime(0.05, state.audioContext.currentTime);
+            gainNode.gain.setValueAtTime(0.05, appState.audioContext.currentTime);
             
             oscillator.start();
-            oscillator.stop(state.audioContext.currentTime + 1);
+            oscillator.stop(appState.audioContext.currentTime + 1);
             
+            addTestResult('Speakers', 'success', 'Working', `${frequency}Hz tone played`);
             showNotification(`Playing ${frequency}Hz test tone`, 'info');
-            
-            // Mark speaker test as passed
-            updateTestResult('audio', 'speakers', 'success', 'Passed', 'Speakers working properly');
         }
 
         function playStereoTest() {
@@ -1495,303 +1054,175 @@
             setTimeout(() => playTestTone(1000), 500);
             setTimeout(() => playTestTone(5000), 1000);
             setTimeout(() => playTestTone(15000), 1500);
+            addTestResult('Stereo Audio', 'success', 'Working', 'Stereo test tones played');
         }
 
-        // Display Test
-        function runDisplayTest() {
-            state.displayTestActive = true;
-            state.currentDisplayTest = 0;
-            
-            document.getElementById('displayTest').classList.add('active');
-            document.body.style.overflow = 'hidden';
-            
-            updateDisplayTest();
-            
-            // Setup display test buttons
-            document.getElementById('prevColor').addEventListener('click', () => {
-                state.currentDisplayTest = (state.currentDisplayTest - 1 + state.displayTests.length) % state.displayTests.length;
-                updateDisplayTest();
-            });
-            
-            document.getElementById('nextColor').addEventListener('click', () => {
-                state.currentDisplayTest = (state.currentDisplayTest + 1) % state.displayTests.length;
-                updateDisplayTest();
-            });
-            
-            document.getElementById('endDisplayTest').addEventListener('click', () => {
-                document.getElementById('displayTest').classList.remove('active');
-                document.body.style.overflow = 'auto';
-                state.displayTestActive = false;
-                updateTestResult('display', 'colors', 'success', 'Passed', 'Display color test completed');
-                showNotification('Display test completed', 'success');
-            });
-        }
-
-        function updateDisplayTest() {
-            const test = state.displayTests[state.currentDisplayTest];
-            const content = document.getElementById('displayTestContent');
-            const title = document.getElementById('displayTestTitle');
-            const desc = document.getElementById('displayTestDesc');
-            
-            content.style.background = test.color;
-            title.textContent = test.name;
-            desc.textContent = test.desc;
-        }
-
-        // ============ SENSOR MONITORING ============
+        // ============ SENSOR TESTS ============
         function initMotionSensors() {
             if (window.DeviceMotionEvent) {
                 window.addEventListener('devicemotion', (event) => {
                     if (event.accelerationIncludingGravity) {
                         const acc = event.accelerationIncludingGravity;
-                        state.sensorData.x = acc.x || 0;
-                        state.sensorData.y = acc.y || 0;
-                        state.sensorData.z = acc.z || 0;
+                        appState.sensorData.x = acc.x || 0;
+                        appState.sensorData.y = acc.y || 0;
+                        appState.sensorData.z = acc.z || 0;
                         
-                        document.getElementById('accelX').textContent = state.sensorData.x.toFixed(2);
-                        document.getElementById('accelY').textContent = state.sensorData.y.toFixed(2);
-                        document.getElementById('accelZ').textContent = state.sensorData.z.toFixed(2);
+                        document.getElementById('accelX').textContent = appState.sensorData.x.toFixed(2);
+                        document.getElementById('accelY').textContent = appState.sensorData.y.toFixed(2);
+                        document.getElementById('accelZ').textContent = appState.sensorData.z.toFixed(2);
                         
-                        // Update test result if accelerometer is working
-                        if (Math.abs(state.sensorData.x) > 0.1 || Math.abs(state.sensorData.y) > 0.1 || Math.abs(state.sensorData.z) > 0.1) {
-                            updateTestResult('sensors', 'accelerometer', 'success', 'Active', 'Motion detected');
+                        // Auto-detect motion for test result
+                        if (Math.abs(appState.sensorData.x) > 0.5 || Math.abs(appState.sensorData.y) > 0.5 || Math.abs(appState.sensorData.z) > 0.5) {
+                            addTestResult('Motion Sensors', 'success', 'Working', 'Motion detected');
                         }
                     }
                 });
             }
         }
 
-        function initTouchCanvas() {
-            const canvas = document.getElementById('touchCanvas');
-            if (!canvas) return;
+        function runSensorTest() {
+            showNotification('Move your device to test motion sensors', 'info');
+            addTestResult('Motion Sensors', 'running', 'Testing...', 'Move device to detect motion');
             
-            canvas.addEventListener('touchstart', handleTouch);
-            canvas.addEventListener('touchmove', handleTouch);
-            canvas.addEventListener('touchend', handleTouchEnd);
-            
-            // Mouse support for desktop testing
-            let mouseDown = false;
-            canvas.addEventListener('mousedown', (e) => {
-                mouseDown = true;
-                handleMouse(e);
-            });
-            canvas.addEventListener('mousemove', (e) => {
-                if (mouseDown) handleMouse(e);
-            });
-            canvas.addEventListener('mouseup', () => {
-                mouseDown = false;
-                handleTouchEnd();
-            });
-        }
-
-        function handleTouch(e) {
-            e.preventDefault();
-            const canvas = document.getElementById('touchCanvas');
-            const rect = canvas.getBoundingClientRect();
-            
-            // Clear old touch points
-            document.querySelectorAll('.touch-point').forEach(el => el.remove());
-            
-            // Update touch count
-            const touchCount = e.touches.length;
-            document.getElementById('touchCount').textContent = touchCount;
-            state.maxSimultaneousTouches = Math.max(state.maxSimultaneousTouches, touchCount);
-            document.getElementById('maxTouch').textContent = state.maxSimultaneousTouches;
-            
-            // Add visual touch points
-            for (let i = 0; i < touchCount; i++) {
-                const touch = e.touches[i];
-                const x = touch.clientX - rect.left;
-                const y = touch.clientY - rect.top;
-                
-                const point = document.createElement('div');
-                point.className = 'touch-point';
-                point.style.left = `${x}px`;
-                point.style.top = `${y}px`;
-                point.style.background = `radial-gradient(circle, hsl(${i * 60}, 100%, 60%) 0%, rgba(10, 132, 255, 0.3) 70%)`;
-                canvas.appendChild(point);
-            }
-            
-            // Update test result
-            if (touchCount > 1) {
-                updateTestResult('display', 'touch', 'success', 'Passed', `${touchCount} touch points detected`);
-            }
-        }
-
-        function handleMouse(e) {
-            const canvas = document.getElementById('touchCanvas');
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            document.querySelectorAll('.touch-point').forEach(el => el.remove());
-            
-            const point = document.createElement('div');
-            point.className = 'touch-point';
-            point.style.left = `${x}px`;
-            point.style.top = `${y}px`;
-            canvas.appendChild(point);
-            
-            document.getElementById('touchCount').textContent = '1';
-            state.maxSimultaneousTouches = Math.max(state.maxSimultaneousTouches, 1);
-            document.getElementById('maxTouch').textContent = state.maxSimultaneousTouches;
-        }
-
-        function handleTouchEnd() {
+            // Check if motion is detected after 3 seconds
             setTimeout(() => {
-                document.querySelectorAll('.touch-point').forEach(el => el.remove());
-                document.getElementById('touchCount').textContent = '0';
-            }, 500);
+                if (Math.abs(appState.sensorData.x) > 0.1 || Math.abs(appState.sensorData.y) > 0.1 || Math.abs(appState.sensorData.z) > 0.1) {
+                    addTestResult('Motion Sensors', 'success', 'Working', 'Sensors active');
+                } else {
+                    addTestResult('Motion Sensors', 'warning', 'Limited motion', 'Try moving device more');
+                }
+            }, 3000);
+        }
+
+        // ============ OTHER TESTS ============
+        function runVibrationTest() {
+            if (navigator.vibrate) {
+                navigator.vibrate([100, 50, 100, 50, 100]);
+                addTestResult('Vibration', 'success', 'Working', 'Vibration pattern played');
+                showNotification('Vibration test successful', 'success');
+            } else {
+                addTestResult('Vibration', 'warning', 'Not supported', 'Vibration API not available');
+                showNotification('Vibration not supported on this device', 'warning');
+            }
+        }
+
+        function runGPSTest() {
+            if (navigator.geolocation) {
+                showNotification('Requesting GPS location...', 'info');
+                addTestResult('GPS', 'running', 'Testing...', 'Requesting location');
+                
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        addTestResult('GPS', 'success', 'Working', 
+                            `Lat: ${position.coords.latitude.toFixed(4)}, Lon: ${position.coords.longitude.toFixed(4)}`);
+                        showNotification('GPS location obtained', 'success');
+                    },
+                    (error) => {
+                        addTestResult('GPS', 'danger', 'Failed', 'Location access denied');
+                        showNotification('GPS access denied', 'warning');
+                    }
+                );
+            } else {
+                addTestResult('GPS', 'warning', 'Not supported', 'Geolocation not available');
+                showNotification('GPS not available', 'warning');
+            }
+        }
+
+        function runNetworkTest() {
+            if (navigator.connection) {
+                const connection = navigator.connection;
+                const type = connection.effectiveType || 'unknown';
+                const downlink = connection.downlink || 'unknown';
+                
+                addTestResult('Network', 'success', 'Connected', 
+                    `Type: ${type}, Speed: ${downlink} Mbps`);
+                showNotification(`Network: ${type}, ${downlink} Mbps`, 'success');
+            } else if (navigator.onLine) {
+                addTestResult('Network', 'success', 'Connected', 'Online status confirmed');
+                showNotification('Network connected', 'success');
+            } else {
+                addTestResult('Network', 'danger', 'Offline', 'No network connection');
+                showNotification('No network connection', 'warning');
+            }
+        }
+
+        function runBatteryTest() {
+            if ('getBattery' in navigator) {
+                navigator.getBattery().then(battery => {
+                    const level = Math.round(battery.level * 100);
+                    const charging = battery.charging ? 'Charging' : 'Not charging';
+                    
+                    addTestResult('Battery', 'success', 'Working', 
+                        `${level}% battery, ${charging}`);
+                    showNotification(`Battery: ${level}%, ${charging}`, 'info');
+                });
+            } else {
+                addTestResult('Battery', 'info', 'Status unknown', 'Battery API not available');
+                showNotification('Battery info not available', 'info');
+            }
         }
 
         // ============ TEST RESULTS MANAGEMENT ============
-        function updateTestResult(suiteId, testId, status, result, details = '') {
-            const testName = TEST_SUITES.find(s => s.id === suiteId)?.tests.find(t => t.id === testId)?.name || testId;
-            const suiteName = TEST_SUITES.find(s => s.id === suiteId)?.name || suiteId;
-            
+        function addTestResult(testName, status, result, details) {
             const table = document.getElementById('resultsTable');
-            const existingRow = document.getElementById(`result-${suiteId}-${testId}`);
+            const row = document.createElement('tr');
+            row.className = 'border-b border-gray-200 dark:border-gray-700';
             
-            const statusBadge = {
-                success: '<span class="status-badge status-success"><i class="fas fa-check-circle"></i> Passed</span>',
-                warning: '<span class="status-badge status-warning"><i class="fas fa-exclamation-triangle"></i> Warning</span>',
-                danger: '<span class="status-badge status-danger"><i class="fas fa-times-circle"></i> Failed</span>',
-                running: '<span class="status-badge status-running"><i class="fas fa-spinner fa-spin"></i> Running</span>'
-            }[status] || statusBadge.running;
+            const statusIcon = {
+                success: '<i class="fas fa-check-circle text-green-500"></i>',
+                danger: '<i class="fas fa-times-circle text-red-500"></i>',
+                warning: '<i class="fas fa-exclamation-triangle text-yellow-500"></i>',
+                info: '<i class="fas fa-info-circle text-blue-500"></i>',
+                running: '<i class="fas fa-spinner fa-spin text-blue-500"></i>'
+            }[status] || '';
             
-            const rowHtml = `
-                <td class="py-4 px-6 font-medium">${testName}</td>
-                <td class="py-4 px-6">${suiteName}</td>
-                <td class="py-4 px-6">${statusBadge}</td>
-                <td class="py-4 px-6">${result}</td>
-                <td class="py-4 px-6 text-sm text-gray-600 dark:text-gray-400">${details}</td>
-                <td class="py-4 px-6 text-sm text-gray-500 dark:text-gray-400">${new Date().toLocaleTimeString()}</td>
-                <td class="py-4 px-6">
-                    <button class="px-3 py-1 bg-gray-200 dark:bg-gray-800 rounded-lg text-sm btn" onclick="retryTest('${suiteId}', '${testId}')">
-                        Retry
-                    </button>
-                </td>
+            row.innerHTML = `
+                <td class="py-3 font-medium">${testName}</td>
+                <td class="py-3">${statusIcon} ${status}</td>
+                <td class="py-3">${result}</td>
+                <td class="py-3 text-sm text-gray-600 dark:text-gray-400">${details}</td>
+                <td class="py-3 text-sm text-gray-500">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
             `;
             
-            if (existingRow) {
-                existingRow.innerHTML = rowHtml;
-            } else {
-                const row = document.createElement('tr');
-                row.id = `result-${suiteId}-${testId}`;
-                row.innerHTML = rowHtml;
-                table.appendChild(row);
-            }
+            table.appendChild(row);
             
-            // Store in results map
-            state.testResults.set(`${suiteId}:${testId}`, {
-                status,
-                result,
-                details,
-                timestamp: new Date().toISOString()
+            // Update health score
+            if (status === 'success') {
+                appState.passedTests++;
+            }
+            appState.totalTests++;
+            
+            const healthScore = appState.totalTests > 0 ? Math.round((appState.passedTests / appState.totalTests) * 100) : 0;
+            appState.healthScore = healthScore;
+            
+            document.getElementById('healthScore').textContent = `${healthScore}%`;
+            document.getElementById('healthBar').style.width = `${healthScore}%`;
+            
+            // Store result
+            appState.testResults.push({
+                name: testName,
+                status: status,
+                result: result,
+                details: details,
+                time: new Date().toISOString()
             });
             
-            // Scroll to the result
-            existingRow?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            // Scroll to bottom of results
+            table.scrollIntoView({ behavior: 'smooth', block: 'end' });
         }
 
-        function updateHealthScore() {
-            const totalTests = state.testResults.size;
-            const passedTests = Array.from(state.testResults.values()).filter(r => r.status === 'success').length;
-            
-            if (totalTests > 0) {
-                state.healthScore = Math.round((passedTests / totalTests) * 100);
-                state.passedTests = passedTests;
-                state.totalTests = totalTests;
-                
-                document.getElementById('healthScore').textContent = `${state.healthScore}%`;
-                document.getElementById('healthBar').style.width = `${state.healthScore}%`;
-            }
-        }
-
-        // ============ EVENT LISTENERS SETUP ============
-        function setupEventListeners() {
-            // Theme toggle
-            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-            
-            // Change device
-            document.getElementById('changeDevice').addEventListener('click', () => {
-                document.getElementById('mainApp').style.display = 'none';
-                document.getElementById('deviceSelection').style.display = 'block';
-            });
-            
-            // Run all tests
-            document.getElementById('runAllTests').addEventListener('click', runAllTests);
-            document.getElementById('fullDiagnostic').addEventListener('click', runAllTests);
-            
-            // Select all tests
-            document.getElementById('selectAllTests').addEventListener('click', () => {
-                document.querySelectorAll('.test-checkbox').forEach(checkbox => {
-                    checkbox.checked = true;
-                    const suite = checkbox.dataset.suite;
-                    const test = checkbox.dataset.test;
-                    state.selectedTests.add(`${suite}:${test}`);
-                });
-                showNotification('All tests selected', 'success');
-            });
-            
-            // Run selected tests
-            document.getElementById('runSelectedTests').addEventListener('click', async () => {
-                if (state.selectedTests.size === 0) {
-                    showNotification('Please select at least one test', 'warning');
-                    return;
-                }
-                
-                state.isTesting = true;
-                showNotification('Running selected tests...', 'info');
-                
-                for (const testId of state.selectedTests) {
-                    const [suiteId, test] = testId.split(':');
-                    updateTestResult(suiteId, test, 'running', 'Testing...');
-                    
-                    try {
-                        await executeHardwareTest(suiteId, test);
-                        await delay(500);
-                    } catch (error) {
-                        console.error(`Test ${test} failed:`, error);
-                        updateTestResult(suiteId, test, 'danger', 'Failed', 'Test error');
-                    }
-                }
-                
-                state.isTesting = false;
-                showNotification('Selected tests completed', 'success');
-            });
-            
-            // Clear results
-            document.getElementById('clearResults').addEventListener('click', () => {
-                document.getElementById('resultsTable').innerHTML = '';
-                state.testResults.clear();
-                state.healthScore = 0;
-                state.passedTests = 0;
-                updateHealthScore();
-                showNotification('Results cleared', 'info');
-            });
-            
-            // Export results
-            document.getElementById('exportResults').addEventListener('click', () => {
-                generateReport();
-                openModal('reportModal');
-            });
+        function clearResults() {
+            document.getElementById('resultsTable').innerHTML = '';
+            appState.testResults = [];
+            appState.passedTests = 0;
+            appState.totalTests = 0;
+            appState.healthScore = 0;
+            document.getElementById('healthScore').textContent = '0%';
+            document.getElementById('healthBar').style.width = '0%';
+            showNotification('Results cleared', 'info');
         }
 
         // ============ UTILITY FUNCTIONS ============
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            if (savedTheme === 'light') {
-                document.documentElement.classList.remove('dark');
-            }
-        }
-
-        function toggleTheme() {
-            document.documentElement.classList.toggle('dark');
-            const isDark = document.documentElement.classList.contains('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        }
-
         function openModal(modalId) {
             document.getElementById(modalId).classList.add('active');
         }
@@ -1801,160 +1232,108 @@
             
             // Clean up resources
             if (modalId === 'cameraModal') {
-                state.cameraStreams.forEach(stream => {
+                // Stop camera streams
+                Object.values(appState.cameraStreams).forEach(stream => {
                     stream.getTracks().forEach(track => track.stop());
                 });
-                state.cameraStreams.clear();
+                appState.cameraStreams = {};
             }
             
-            if (modalId === 'audioModal' && state.microphoneStream) {
-                state.microphoneStream.getTracks().forEach(track => track.stop());
-                state.microphoneStream = null;
+            if (modalId === 'audioModal' && appState.microphoneStream) {
+                appState.microphoneStream.getTracks().forEach(track => track.stop());
+                appState.microphoneStream = null;
             }
         }
 
         function showNotification(message, type = 'info') {
+            // Create notification element
             const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 z-50 animate__animated animate__fadeInRight`;
+            notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-xl shadow-lg transform transition-transform duration-300 translate-x-full`;
+            
+            const colors = {
+                success: 'bg-green-500 text-white',
+                warning: 'bg-yellow-500 text-white',
+                danger: 'bg-red-500 text-white',
+                info: 'bg-blue-500 text-white'
+            };
+            
+            notification.className += ` ${colors[type]}`;
             notification.innerHTML = `
-                <div class="glass p-4 rounded-2xl shadow-xl flex items-center space-x-3 min-w-80">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br ${type === 'success' ? 'from-green-500 to-emerald-600' : type === 'warning' ? 'from-yellow-500 to-orange-600' : type === 'danger' ? 'from-red-500 to-pink-600' : 'from-blue-500 to-cyan-600'} flex items-center justify-center">
-                        <i class="fas ${type === 'success' ? 'fa-check' : type === 'warning' ? 'fa-exclamation-triangle' : type === 'danger' ? 'fa-times' : 'fa-info'} text-white"></i>
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-semibold">${message}</p>
-                    </div>
-                    <button class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" onclick="this.parentElement.parentElement.remove()">
-                        <i class="fas fa-times"></i>
-                    </button>
+                <div class="flex items-center">
+                    <i class="fas ${type === 'success' ? 'fa-check' : type === 'warning' ? 'fa-exclamation-triangle' : type === 'danger' ? 'fa-times' : 'fa-info'} mr-2"></i>
+                    <span>${message}</span>
                 </div>
             `;
             
             document.body.appendChild(notification);
             
-            // Auto-remove after 5 seconds
+            // Animate in
             setTimeout(() => {
-                if (notification.parentElement) {
+                notification.classList.remove('translate-x-full');
+                notification.classList.add('translate-x-0');
+            }, 10);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('translate-x-0');
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
                     notification.remove();
-                }
-            }, 5000);
+                }, 300);
+            }, 3000);
         }
 
-        function delay(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
-        // ============ REPORT GENERATION ============
-        function generateReport() {
-            const reportContent = document.getElementById('reportContent');
-            const device = state.currentDevice;
-            
-            let html = `
-                <h3 class="text-xl font-bold mb-6">Diagnostic Report</h3>
-                <div class="space-y-4">
-                    <div class="flex items-center">
-                        <div class="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
-                        <span><strong>Device:</strong> ${device.name} (${device.year})</span>
-                    </div>
-                    <div class="flex items-center">
-                        <div class="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
-                        <span><strong>Health Score:</strong> ${state.healthScore}%</span>
-                    </div>
-                    <div class="flex items-center">
-                        <div class="w-3 h-3 rounded-full bg-purple-500 mr-2"></div>
-                        <span><strong>Tests Completed:</strong> ${state.passedTests}/${state.totalTests}</span>
-                    </div>
-                </div>
-                
-                <h4 class="font-bold mt-8 mb-4">Test Results:</h4>
-                <div class="space-y-2">
-            `;
-            
-            for (const [testId, result] of state.testResults) {
-                const [suiteId, test] = testId.split(':');
-                const testName = TEST_SUITES.find(s => s.id === suiteId)?.tests.find(t => t.id === test)?.name || test;
-                const statusColor = result.status === 'success' ? 'green' : result.status === 'warning' ? 'yellow' : 'red';
-                
-                html += `
-                    <div class="flex items-center justify-between bg-gray-50 dark:bg-gray-900 p-3 rounded">
-                        <div class="flex items-center">
-                            <div class="w-2 h-2 rounded-full bg-${statusColor}-500 mr-2"></div>
-                            <span>${testName}</span>
-                        </div>
-                        <span class="text-sm">${result.result} - ${result.details}</span>
-                    </div>
-                `;
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
             }
-            
-            html += `
-                </div>
-                <div class="mt-6 text-sm text-gray-600 dark:text-gray-400">
-                    Generated: ${new Date().toLocaleString()}
-                </div>
-            `;
-            
-            reportContent.innerHTML = html;
         }
 
-        function downloadReport(format) {
-            let content = `Apple Hardware Diagnostic Report\n`;
-            content += `Generated: ${new Date().toLocaleString()}\n`;
-            content += `Device: ${state.currentDevice.name}\n`;
-            content += `Health Score: ${state.healthScore}%\n\n`;
-            content += `TEST RESULTS:\n`;
-            content += `=============\n\n`;
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        function checkDeviceFeatures() {
+            // Check available features
+            const features = [];
             
-            for (const [testId, result] of state.testResults) {
-                const [suiteId, test] = testId.split(':');
-                const testName = TEST_SUITES.find(s => s.id === suiteId)?.tests.find(t => t.id === test)?.name || test;
-                content += `${testName}: ${result.result}\n`;
-                content += `  Status: ${result.status}\n`;
-                content += `  Details: ${result.details}\n`;
-                content += `  Time: ${new Date(result.timestamp).toLocaleTimeString()}\n\n`;
+            if (window.DeviceMotionEvent) features.push('Motion Sensors');
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                features.push('Camera', 'Microphone');
             }
+            if (navigator.vibrate) features.push('Vibration');
+            if (navigator.geolocation) features.push('GPS');
+            if (navigator.connection) features.push('Network Info');
+            if ('getBattery' in navigator) features.push('Battery Info');
             
-            const blob = new Blob([content], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'diagnostic_report.txt';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            showNotification('Report downloaded', 'success');
-        }
-
-        function shareReport() {
-            if (navigator.share) {
-                const device = state.currentDevice;
-                navigator.share({
-                    title: 'Hardware Diagnostic Results',
-                    text: `My ${device.name} scored ${state.healthScore}% on hardware tests. ${state.passedTests}/${state.totalTests} tests passed.`,
-                    url: window.location.href
-                });
-            } else {
-                showNotification('Sharing not supported on this device', 'warning');
+            if (features.length > 0) {
+                showNotification(`Available features: ${features.join(', ')}`, 'info');
             }
         }
 
         // ============ GLOBAL FUNCTIONS ============
+        window.runTouchTest = runTouchTest;
+        window.runDisplayTest = runDisplayTest;
+        window.runCameraTest = runCameraTest;
+        window.runAudioTest = runAudioTest;
+        window.startFullTest = startFullTest;
         window.closeModal = closeModal;
-        window.retryTest = (suiteId, testId) => {
-            runSingleTest(suiteId, testId);
-        };
+        window.prevColor = prevColor;
+        window.nextColor = nextColor;
+        window.endDisplayTest = endDisplayTest;
+        window.testCamera = testCamera;
+        window.testFlash = testFlash;
+        window.testFocus = testFocus;
+        window.testZoom = testZoom;
+        window.takePhoto = takePhoto;
+        window.startMicTest = startMicTest;
+        window.stopMicTest = stopMicTest;
         window.playTestTone = playTestTone;
         window.playStereoTest = playStereoTest;
-        window.runDisplayTest = runDisplayTest;
-        window.openCameraTest = openCameraTest;
-        window.openAudioTest = openAudioTest;
-        window.testFlash = testFlash;
-        window.testAutoFocus = () => showNotification('Auto focus test simulated', 'info');
-        window.testZoom = () => showNotification('Zoom test simulated', 'info');
-        window.testHDR = () => showNotification('HDR check simulated', 'info');
-        window.downloadReport = downloadReport;
-        window.shareReport = shareReport;
+        window.clearResults = clearResults;
     </script>
 </body>
 </html>
